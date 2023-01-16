@@ -10,20 +10,26 @@ api_instance = client.CoreV1Api()
 
 # Use the watch function to stream updates of pods in the cluster
 w = watch.Watch()
+
 for event in w.stream(api_instance.list_pod_for_all_namespaces):
+    
     # Print the type and name of the event
     print("Event: %s %s" % (event['type'], event['object'].metadata.name))
+    
     # Filter events related to failed pods
     if 'failed' in event['object'].status.phase:
+        
         # Print the name and reason of the failed pod
         print("Pod: %s - Reason: %s" % (event['object'].metadata.name, event['object'].status.reason))
+        
         # Send OS notification
         notification.notify(
             title='Failed Pod',
             message=f'Pod {event["object"].metadata.name} has failed. Reason: {event["object"].status.reason}',
             timeout=10
-        )
+        )    
     else:
+        
         # Check the status of the containers inside the pod
         if event['object'].status.container_statuses is not None:
             for container_status in event['object'].status.container_statuses:
