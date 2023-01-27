@@ -18,8 +18,6 @@ df = df[[' Download Soll', ' Download Ist',
 print(df)
 
 
-
-
 # Testing with a result at column 'Download Ist' row 7 
 # Extracting only the float number for analyse.
 
