@@ -3,12 +3,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-#from selenium.webdriver.support import expected_conditions as EC
-#from selenium.webdriver.support.ui import Select
-#import pandas as pd
 from selenium.webdriver.chrome.options import Options
-#import datetime
+
 
 
 
@@ -25,7 +21,7 @@ url = 'https://www.kayak.de/'
 
 # Driver to use (webdriver.Chrome or Firefox..or etc.) with the driver path as string param
 
-service = ChromeService(executable_path='/home/astegaru/Downloads/chromedriver_linux64/chromedriver')
+service = ChromeService(executable_path='/path/to/chrome-driver/chromedriver_linux64/chromedriver')
 service.start()
 driver = webdriver.Remote(service.service_url, options=options)
 
@@ -34,7 +30,8 @@ sleep(2)
 # Open up Chrome
 driver.get(url)
 driver.maximize_window()
-sleep(1)
+
+sleep(3) # wait for the cookies promt!
 
 # Very useful snippet to accept cookies! button[contains](string()
 accept = driver.find_elements(By.XPATH, "//button[contains(string(), 'Akzeptieren')]")[0].click()
@@ -55,19 +52,20 @@ source = driver.find_element(By.XPATH, '//input[@type="text"]').send_keys(f'{tow
 sleep(1)
 select = driver.find_element(By.XPATH, '//*[@id="flight-origin-smarty-input-list"]/li/div').click()
 
-#sleep(1)
+
 # Problems here: the zEiP ID CHANGE! Need another locator!!!
-#destination = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/main/div[1]/div[1]/div/div[1]/div/div/section[2]/div/div/div/div/div/div[1]/div[2]/div/div[3]/div/div/input').send_keys('OTP')
+# Used aria-label
 destination = driver.find_element(By.XPATH, '//*[@aria-label="Eingabe Flugziel"]').send_keys(f'{town2}')
 
 
 
-sleep(1)    # Aufpassen mit sleep. 1 kann manchmal zu wenig sein!
+sleep(1)    # 1 can somethimes be to low.
 select = driver.find_element(By.XPATH, '//*[@id="flight-destination-smarty-input-list"]/li/div').click()
 
 original_window = driver.current_window_handle
 
 sleep(1)
+
 # Choose Date
 
 start_date = input('Enter the start date (ex.: Mittwoch 1. März 2023): ')
@@ -95,22 +93,6 @@ send_return_date = driver.find_element(By.XPATH, f'//*[@class="onx_-days"]/div[@
 submit = driver.find_element(By.XPATH, '//button[@type="submit"]').click()
 sleep(25)
 
-# =============================================
-# NOT NEEDED, AS I MAXIMIZED THE 
-# WINDOW AND A NEW TAB DOESN'T OPEN ANYMORE
-# =============================================
-
-#Close the tab or window
-#sleep(2)
-#new_window = driver.current_window_handle
-
-#Switch back to the old tab or window
-#driver.switch_to.window(new_window)
-#driver.close()
-
-
-#price = driver.find_element(By.XPATH, '//*[@class="listBody"]/div[@class="listInner"]').text
-#price = driver.find_element(By.XPATH, '//div/[@class="listBody"]/div[@class="resultsContainer"]').text
 
 price = driver.find_element(By.XPATH, '//*[@aria-label="Flug-Suchergebnisse"]').text
 
